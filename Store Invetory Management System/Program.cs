@@ -63,7 +63,7 @@ internal class Program
         var password = Console.ReadLine();
 
         // store the employee's info
-        connection.Query($"INSERT INTO [dbo].[Employee]\r\nVALUES ('{firstName}', '{lastName}'), '{title}', '{password}';");
+        connection.Query($"INSERT INTO [dbo].[Employee]\r\nVALUES ('{firstName}', '{lastName}','{title}', '{password}');");
 
     }
 
@@ -83,7 +83,7 @@ internal class Program
     {
 
         var employee = connection.Query<Employee>("SELECT * FROM employee").ToList();
-        connection.Query($"SELECT* FROM[dbo].[Employee] WHERE UserId = '{id}';");
+        connection.Query($"SELECT* FROM[dbo].[Employee] WHERE id = '{id}';");
 
         //this will show the NAME and ID of each product
         foreach (var item in employee)
