@@ -15,14 +15,14 @@ internal class Program
     private static void Main(string[] args)
     {
 
-        var cs = @"Server=DESKTOP-MASQELN\EDANROSENSQL;Database=Learning;Trusted_Connection=True;";
+        var cs = @"Server=DESKTOP-MASQELN\EDANROSENSQL;Database=Store_Invetory_Management;Trusted_Connection=True;";
 
         connection = new SqlConnection(cs);
         connection.Open();
 
-        var products = connection.Query<Product>("SELECT * FROM product").ToList();
+        var product = connection.Query<Product>("SELECT * FROM product").ToList();
         var employees = connection.Query<Employee>("SELECT * FROM employee").ToList();
-        var stors = connection.Query<Store>("SELECT * FROM store").ToList();
+        var stor = connection.Query<Store>("SELECT * FROM store").ToList();
 
 
 
@@ -33,7 +33,7 @@ internal class Program
             Console.WriteLine("Enter store location? ");
             var userinput = Console.ReadLine();
 
-
+            
 
          
 
