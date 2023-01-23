@@ -33,8 +33,9 @@ internal class Program
             Console.WriteLine("Enter store location? ");
             var userinput = Console.ReadLine();
 
-            
 
+            AddEmployee();
+            ListEmployee(1);
          
 
         }
