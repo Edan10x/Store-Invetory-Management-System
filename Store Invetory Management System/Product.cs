@@ -19,7 +19,7 @@ namespace Store_Invetory_Management_System
 
         public int Amount { get; set; } 
 
-        public int AisleNumber { get; set; }
+        public string Aisle { get; set; }
         
         
         
