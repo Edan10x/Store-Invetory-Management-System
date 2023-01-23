@@ -20,4 +20,6 @@ namespace Store_Invetory_Management_System
         public string? Password { get; set; }    
 
     }
+
+
 }
