@@ -23,6 +23,7 @@ internal class Program
         var product = connection.Query<Product>("SELECT * FROM product").ToList();
         var employees = connection.Query<Employee>("SELECT * FROM employee").ToList();
         var store = connection.Query<Store>("SELECT * FROM store").ToList();
+        var logins = connection.Query<Login>("SELECT * FROM login").ToList();
 
 
 
@@ -54,11 +55,6 @@ internal class Program
             {
                 Console.WriteLine("Please enter yes/no");
             }
-
-                
-
-
-
 
         }
 
@@ -94,11 +90,8 @@ internal class Program
         Console.WriteLine("What is your title? ");
         var title = Console.ReadLine();
 
-        Console.WriteLine("Please create a strong password ");
-        var password = Console.ReadLine();
-
         // store the employee's info
-        connection.Query($"INSERT INTO [dbo].[Employee]\r\nVALUES ('{firstName}', '{lastName}','{title}', '{password}');");
+        connection.Query($"INSERT INTO [dbo].[Employee]\r\nVALUES ('{firstName}', '{lastName}','{title}');");
 
     }
 
@@ -139,13 +132,13 @@ internal class Program
         Console.WriteLine("Product name? ");
 
         // get the user input
-        var NameOfProduct = Console.ReadLine();
+        var name = Console.ReadLine();
 
         Console.WriteLine("Store ID? ");
         var storeId = Console.ReadLine();
 
         // store the user input in the Product table in database
-        connection.Query($"INSERT INTO [dbo].[Product]\r\nVALUES ('{NameOfProduct}', '{storeId}');");
+        connection.Query($"INSERT INTO [dbo].[Product]\r\nVALUES ('{name}', '{storeId}');");
     }
 
     // function to remove an item from the database
