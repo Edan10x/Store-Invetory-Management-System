@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace Store_Invetory_Management_System
 {
-    internal class Product
+    internal class Login
     {
-
         public int Id { get; set; } 
 
-        public string? Name { get; set; }
-
-        public double Price { get; set; }  
+        public string? UserName { get; set; } 
         
-  
+        public string? Password { get; set; }
 
     }
 }

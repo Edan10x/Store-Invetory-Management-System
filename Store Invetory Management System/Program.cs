@@ -9,7 +9,7 @@ internal class Program
     // get access to all methods 
     static SqlConnection? connection;
     static bool quitProgram = false;
-    static bool loggedIn = false;
+    static bool login = false;
 
 
     private static void Main(string[] args)
@@ -22,26 +22,61 @@ internal class Program
 
         var product = connection.Query<Product>("SELECT * FROM product").ToList();
         var employees = connection.Query<Employee>("SELECT * FROM employee").ToList();
-        var stor = connection.Query<Store>("SELECT * FROM store").ToList();
+        var store = connection.Query<Store>("SELECT * FROM store").ToList();
 
 
 
-        Console.WriteLine("Welcome to C# store");
+        Console.WriteLine("Welcome to C# supermarket");
+        while (quitProgram == false)
+        {
 
-        while (quitProgram == false){
+            Console.WriteLine("Do you have a login info? yes/no"); 
+            var yesNo = Console.ReadLine();
+            yesNo = yesNo?.ToLower();
 
-            Console.WriteLine("Enter store location? ");
-            var userinput = Console.ReadLine();
+            if (yesNo == "yes")
+            {
+                Console.WriteLine("User name: ");
+                var userName = Console.ReadLine();
+
+                Console.WriteLine("Password: ");
+                var password = Console.ReadLine();
+
+            }
+            else if (yesNo == "no")
+            {
+                Console.WriteLine("Let's begin by creating one");
+                NewLogin();
 
 
-            AddEmployee();
-            ListEmployee(1);
-         
+            }
+            else
+            {
+                Console.WriteLine("Please enter yes/no");
+            }
+
+                
+
+
+
 
         }
 
 
     }
+
+    public static void NewLogin()
+    {
+
+        Console.WriteLine("Enter a user name: ");
+        var userName = Console.ReadLine();
+
+        Console.WriteLine("Create a strong password: ");
+        var userPassword = Console.ReadLine();
+
+        // store the employee's new login info
+        connection.Query($"INSERT INTO [dbo].[Login]\r\nVALUES ('{userName}', '{userPassword}');");
+    } 
 
     //function to add employee to the store
 
@@ -89,8 +124,8 @@ internal class Program
         foreach (var item in employee)
         {
             Console.WriteLine("===========================");
-            Console.WriteLine("Employee's first name " + item.FirstName);
-            Console.WriteLine("Employee's last name " + item.LastName);
+            Console.WriteLine("Employee's first name: " + item.FirstName);
+            Console.WriteLine("Employee's last name: " + item.LastName);
             Console.WriteLine("Employee title: " + item.Title);
             Console.WriteLine("===========================\n");
         }
@@ -117,7 +152,7 @@ internal class Program
     public static void RemoveProduct()
     {
 
-        Console.WriteLine("Whice product would you like to delete ");
+        Console.WriteLine("Whice product would you like to remove ");
         string productId = Console.ReadLine();
 
         // this would delete the ID of the product
@@ -125,23 +160,44 @@ internal class Program
     }
 
     // function to show the items in the database
-    public static List<Product> ListProducts(int storeId)
+    public static List<Product> ListProducts(int productId)
     {
 
         var products = connection.Query<Product>("SELECT * FROM product").ToList();
-        connection.Query($"SELECT* FROM[dbo].[Product] WHERE UserId = '{storeId}';");
+        connection.Query($"SELECT* FROM[dbo].[Inventory] WHERE ProductId = '{productId}';");
 
         //this will show the NAME and ID of each product
         foreach (var item in products)
         {
             Console.WriteLine("===========================");
-            Console.WriteLine("Item: " + item.NameOfProduct);
-            Console.WriteLine("ID: " + item.Id);
-            Console.WriteLine("User ID: " + item.StoreID);
+            Console.WriteLine("Product name: " + item.Name);
+            Console.WriteLine("product ID: " + item.Id);
+            Console.WriteLine("Price: " + item.Price);
+            Console.WriteLine("Store ID: " + productId);
             Console.WriteLine("===========================\n");
         }
 
         return products;
+    }
+
+    //this will show the inventory list
+    public static List<Inventory> ListInventory(int storeId)
+    {
+
+        var inventory = connection.Query<Inventory>("SELECT * FROM inventory").ToList();
+        connection.Query($"SELECT* FROM[dbo].[Product] WHERE UserId = '{storeId}';");
+
+        // need to fix
+        foreach (var item in inventory)
+        {
+            Console.WriteLine("===========================");
+            Console.WriteLine("Product name: " + item);
+            Console.WriteLine("product ID: " + item.Id);
+            Console.WriteLine("Price: " );
+            Console.WriteLine("===========================\n");
+        }
+
+        return inventory;
     }
 
     // function to quit the program

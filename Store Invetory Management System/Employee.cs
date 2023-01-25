@@ -17,6 +17,8 @@ namespace Store_Invetory_Management_System
 
         public string? Title { get; set; }
 
+
+        // need to delete
         public string? Password { get; set; }    
 
     }

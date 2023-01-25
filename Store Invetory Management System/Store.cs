@@ -14,5 +14,6 @@ namespace Store_Invetory_Management_System
         public string? StoreLocation { get; set; }   
 
 
+
     }
 }
