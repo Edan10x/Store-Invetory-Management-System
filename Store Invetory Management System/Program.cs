@@ -2,6 +2,7 @@
 using Store_Invetory_Management_System;
 using System;
 using System.Data.SqlClient;
+using System.Threading.Channels;
 
 internal class Program
 {
@@ -9,7 +10,7 @@ internal class Program
     // get access to all methods 
     static SqlConnection? connection;
     static bool quitProgram = false;
-    static bool login = false;
+    static bool quitLogin = false;
 
 
     private static void Main(string[] args)
@@ -30,35 +31,56 @@ internal class Program
         Console.WriteLine("Welcome to C# supermarket");
         while (quitProgram == false)
         {
-
-            Console.WriteLine("Do you have a login info? yes/no"); 
-            var yesNo = Console.ReadLine();
-            yesNo = yesNo?.ToLower();
-
-            if (yesNo == "yes")
+            while(quitLogin == false)
             {
-                Console.WriteLine("User name: ");
-                var userName = Console.ReadLine();
 
-                Console.WriteLine("Password: ");
-                var password = Console.ReadLine();
+                Console.WriteLine("Do you have a login info? yes/no");
+                var yesNo = Console.ReadLine();
+                yesNo = yesNo?.ToLower();
 
+                if (yesNo == "yes")
+                {
+                    IsLogingValid();
+                }
+                else if (yesNo == "no")
+                {
+                    Console.WriteLine("Let's begin by creating one");
+                    NewLogin();
+                }
+                else
+                {
+                    Console.WriteLine("Please enter yes/no");
+                }
             }
-            else if (yesNo == "no")
-            {
-                Console.WriteLine("Let's begin by creating one");
-                NewLogin();
-
-
-            }
-            else
-            {
-                Console.WriteLine("Please enter yes/no");
-            }
-
+           
         }
+        // this would close the connection to the database
+        connection.Close();
 
+    }
 
+    public static bool IsLogingValid() {
+
+        Console.WriteLine("User name: ");
+        var userName = Console.ReadLine();
+
+        Console.WriteLine("Password: ");
+        var password = Console.ReadLine();
+
+        var loginVarefication = connection.Query<Login>($"SELECT * FROM [Login] WHERE Password = '{password}' and  UserName = '{userName}'; \r\n").ToList();
+
+        if (loginVarefication.Count == 0)
+        {
+            Console.WriteLine("Worng password or user name! Please try again");
+            return false;
+        }
+        else
+        {
+
+            Console.WriteLine("Great, logged in successfully");
+            return true;
+        }
+        
     }
 
     public static void NewLogin()
@@ -72,6 +94,10 @@ internal class Program
 
         // store the employee's new login info
         connection.Query($"INSERT INTO [dbo].[Login]\r\nVALUES ('{userName}', '{userPassword}');");
+
+
+       
+      
     } 
 
     //function to add employee to the store
@@ -178,19 +204,27 @@ internal class Program
     {
 
         var inventory = connection.Query<Inventory>("SELECT * FROM inventory").ToList();
+        // need to fix
         connection.Query($"SELECT* FROM[dbo].[Product] WHERE UserId = '{storeId}';");
 
-        // need to fix
+       
         foreach (var item in inventory)
         {
             Console.WriteLine("===========================");
-            Console.WriteLine("Product name: " + item);
-            Console.WriteLine("product ID: " + item.Id);
-            Console.WriteLine("Price: " );
+            Console.WriteLine("Store ID: " + item.StoreId);
+            Console.WriteLine("product ID: " + item.ProductId);
+            Console.WriteLine("Quantity: " + item.Quantity);
+            Console.WriteLine("On aisle: " + item.Aisle);
             Console.WriteLine("===========================\n");
         }
 
         return inventory;
+    }
+
+    // function to log out of the employee login
+    public static void QuitLogin()
+    {
+        quitLogin = true;
     }
 
     // function to quit the program
