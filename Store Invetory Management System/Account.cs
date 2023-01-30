@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Store_Invetory_Management_System
 {
-    internal class Login
+    internal class Account
     {
         public int Id { get; set; } 
 

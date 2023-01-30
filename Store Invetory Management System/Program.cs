@@ -10,7 +10,7 @@ internal class Program
     // get access to all methods 
     static SqlConnection? connection;
     static bool quitProgram = false;
-    static bool quitLogin = false;
+    
 
 
     private static void Main(string[] args)
@@ -24,41 +24,83 @@ internal class Program
         var product = connection.Query<Product>("SELECT * FROM product").ToList();
         var employees = connection.Query<Employee>("SELECT * FROM employee").ToList();
         var store = connection.Query<Store>("SELECT * FROM store").ToList();
-        var logins = connection.Query<Login>("SELECT * FROM login").ToList();
+        var accounts = connection.Query<Account>("SELECT * FROM account").ToList();
 
 
 
         Console.WriteLine("Welcome to C# supermarket");
+        Console.WriteLine("Do you have an account? yes/no");
         while (quitProgram == false)
         {
-            while(quitLogin == false)
-            {
-
-                Console.WriteLine("Do you have a login info? yes/no");
+       
                 var yesNo = Console.ReadLine();
                 yesNo = yesNo?.ToLower();
 
                 if (yesNo == "yes")
                 {
                     IsLogingValid();
+                    DropDown();
+                    
                 }
                 else if (yesNo == "no")
                 {
                     Console.WriteLine("Let's begin by creating one");
-                    NewLogin();
+                    NewAccount();
+                    DropDown();
                 }
                 else
                 {
                     Console.WriteLine("Please enter yes/no");
                 }
-            }
-           
+            DropDown();
+  
         }
         // this would close the connection to the database
         connection.Close();
 
     }
 
+    public static void DropDown()
+    {
+        Console.WriteLine("Please choose one of the following options: ");
+        Console.WriteLine("1) Add a product");
+        Console.WriteLine("2) Remove a product");
+        Console.WriteLine("3) List of all products");
+        Console.WriteLine("4) Quit account");
+
+
+        // convert from a string into int input
+        var input = Convert.ToInt32(Console.ReadLine());
+
+        if (input < 1 || input > 4)
+        {
+            Console.WriteLine("input not valid!\n");
+
+        }
+
+        switch (input)
+        {
+            case 1:
+                AddProduct();
+                break;
+
+            case 2:
+                RemoveProduct();
+                break;
+
+            case 3:
+
+                var products = ListProducts(1);
+                break;
+
+            case 4:
+                Quit();
+                break;
+        }
+
+    }
+
+    // this function will check if the user enter correct password and user id
     public static bool IsLogingValid() {
 
         Console.WriteLine("User name: ");
@@ -67,8 +109,11 @@ internal class Program
         Console.WriteLine("Password: ");
         var password = Console.ReadLine();
 
-        var loginVarefication = connection.Query<Login>($"SELECT * FROM [Login] WHERE Password = '{password}' and  UserName = '{userName}'; \r\n").ToList();
+        
+        var loginVarefication = connection.Query<Account>($"SELECT * FROM [Account] WHERE Password = '{password}' and  UserName = '{userName}'; \r\n").ToList();
 
+
+        // 'Count' represnt the raw in the table
         if (loginVarefication.Count == 0)
         {
             Console.WriteLine("Worng password or user name! Please try again");
@@ -79,11 +124,13 @@ internal class Program
 
             Console.WriteLine("Great, logged in successfully");
             return true;
+            
         }
+       
         
     }
 
-    public static void NewLogin()
+    public static void NewAccount()
     {
 
         Console.WriteLine("Enter a user name: ");
@@ -92,12 +139,24 @@ internal class Program
         Console.WriteLine("Create a strong password: ");
         var userPassword = Console.ReadLine();
 
-        // store the employee's new login info
-        connection.Query($"INSERT INTO [dbo].[Login]\r\nVALUES ('{userName}', '{userPassword}');");
+        //Console.WriteLine("Enter your employee ID: ");
+        //var id = Console.ReadLine();
 
 
-       
-      
+
+
+        if (connection.Query<Account>($"SELECT * FROM [Account] WHERE Password = '{userPassword}' and  UserName = '{userName}'; \r\n").ToList().Count == 1)
+        {
+            Console.WriteLine("Sorry, this user name or password is already taken");
+            
+        }
+        else
+        {
+            // store the employee's new account info
+            var newAccount = connection.Query($"INSERT INTO [dbo].[Account]\r\nVALUES ('{userName}', '{userPassword}';");
+            Console.WriteLine("Account was created successfully"); 
+        }
+
     } 
 
     //function to add employee to the store
@@ -221,15 +280,10 @@ internal class Program
         return inventory;
     }
 
-    // function to log out of the employee login
-    public static void QuitLogin()
-    {
-        quitLogin = true;
-    }
-
     // function to quit the program
     public static void Quit()
     {
         quitProgram = true;
+        Console.WriteLine("See you later");
     }
 }
