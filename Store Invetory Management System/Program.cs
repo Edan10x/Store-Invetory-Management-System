@@ -39,7 +39,7 @@ internal class Program
                 if (yesNo == "yes")
                 {
                     IsLogingValid();
-                    DropDown();
+                   // DropDown();
                     
                 }
                 else if (yesNo == "no")
@@ -66,7 +66,7 @@ internal class Program
         Console.WriteLine("1) Add a product");
         Console.WriteLine("2) Remove a product");
         Console.WriteLine("3) List of all products");
-        Console.WriteLine("4) Quit account");
+        Console.WriteLine("4) Exit account");
 
 
         // convert from a string into int input
@@ -142,9 +142,6 @@ internal class Program
         //Console.WriteLine("Enter your employee ID: ");
         //var id = Console.ReadLine();
 
-
-
-
         if (connection.Query<Account>($"SELECT * FROM [Account] WHERE Password = '{userPassword}' and  UserName = '{userName}'; \r\n").ToList().Count == 1)
         {
             Console.WriteLine("Sorry, this user name or password is already taken");
@@ -153,7 +150,7 @@ internal class Program
         else
         {
             // store the employee's new account info
-            var newAccount = connection.Query($"INSERT INTO [dbo].[Account]\r\nVALUES ('{userName}', '{userPassword}';");
+            connection.Query($"INSERT INTO [dbo].[Account]\r\nVALUES ('{userName}', '{userPassword}';");
             Console.WriteLine("Account was created successfully"); 
         }
 
